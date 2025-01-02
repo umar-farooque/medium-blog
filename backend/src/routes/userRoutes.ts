@@ -32,6 +32,7 @@ userRouter.post(`/signup`, async (c) => {
     data: {
       password: body.password,
       email: body.email,
+      name: body.name,
     },
   });
   const token = await sign({ id: user.id }, c.env.JWT_SECRET_KEY, "HS256");

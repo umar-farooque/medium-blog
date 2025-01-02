@@ -1,14 +1,13 @@
-import { SignupType } from "@umarkhan1999/medium-blog-types";
+import { SigninType } from "@umarkhan1999/medium-blog-types";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createAccount } from "../api/auth";
+import { login } from "../api/auth";
 import Button from "./Button";
 import LabelledInput from "./LabelledInput";
 
-export default function SignupForm() {
-  const [input, setInput] = useState<SignupType>({
+export default function SigninForm() {
+  const [input, setInput] = useState<SigninType>({
     email: "",
-    name: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -20,10 +19,11 @@ export default function SignupForm() {
     e.preventDefault();
     // submit the form to your server here
     try {
-      const response = await createAccount({ ...input });
-      const token = response.data.token;
+      const {
+        data: { token },
+      } = await login({ ...input });
       localStorage.setItem("token", token);
-      navigate("/");
+      navigate("/")
     } catch (error) {
       console.log(error);
     }
@@ -32,25 +32,16 @@ export default function SignupForm() {
     <div className="flex justify-center items-center w-full md:w-[50%] flex-1">
       <div className="w-full md:w-6/12">
         <div className="px-12">
-          <h1 className="text-4xl font-extrabold">Create Account</h1>
+          <h1 className="text-4xl font-extrabold">Sign In</h1>
           <p className="text-slate-500 mt-2 text-base">
-            Already have Account?
-            <Link to="/signin" className="pl-2 underline">
-              Signin
+            Don't have an Account?
+            <Link to="/signup" className="pl-2 underline">
+              Signup
             </Link>
           </p>
         </div>
 
         <form className="my-4 flex flex-col gap-6" onSubmit={handleSubmit}>
-          <LabelledInput
-            name="name"
-            onChange={handleChange}
-            label="Name"
-            htmlFor="name"
-            placeholder="Please Enter your name"
-            type="text"
-            value={input.name || ""}
-          />
           <LabelledInput
             name="email"
             onChange={handleChange}
@@ -69,7 +60,7 @@ export default function SignupForm() {
             type="password"
             value={input.password}
           />
-          <Button type="submit">Signup</Button>
+          <Button type="submit">Signin</Button>
         </form>
       </div>
     </div>
